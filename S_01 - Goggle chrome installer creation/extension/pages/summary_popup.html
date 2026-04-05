@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SummaryGo — Summary</title>
+    <link rel="stylesheet" href="summary_popup.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+    <header class="top">
+      <div class="brand-block">
+        <span class="glyph" aria-hidden="true"></span>
+        <div>
+          <p class="eyebrow">SummaryGo</p>
+          <h1 id="heading">Page summary</h1>
+        </div>
+      </div>
+      <p id="tab-line" class="tab-line"></p>
+    </header>
+    <main>
+      <article id="summary-body" class="summary-body"></article>
+      <p id="meta" class="meta"></p>
+    </main>
+    <footer class="actions">
+      <button type="button" id="copy">Copy summary</button>
+      <button type="button" id="close" class="secondary">Close</button>
+    </footer>
+    <script src="summary_popup.js"></script>
+  </body>
+</html>

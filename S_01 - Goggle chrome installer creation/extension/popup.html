@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SummaryGo</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <span class="orb"></span>
+          <div>
+            <h1>SummaryGo</h1>
+            <p class="tag">Local meaning &amp; page summaries</p>
+          </div>
+        </div>
+        <div id="pill" class="pill off">Server</div>
+      </header>
+
+      <section class="panel">
+        <label for="word">Look up meaning</label>
+        <div class="row">
+          <input id="word" type="text" placeholder="Type or paste a word or phrase…" autocomplete="off" />
+          <button type="button" id="btn-meaning">Define</button>
+        </div>
+        <p id="meaning-out" class="out" hidden></p>
+      </section>
+
+      <section class="panel">
+        <label>Summarize active tab</label>
+        <p class="help">Uses visible text on the page. Works best on articles and docs.</p>
+        <button type="button" id="btn-summarize" class="wide">Summarize this page</button>
+        <p id="summarize-status" class="status" aria-live="polite"></p>
+      </section>
+
+      <footer>
+        <span>Tip: right-click selection or page for the same actions.</span>
+      </footer>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
