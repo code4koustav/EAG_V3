@@ -7,6 +7,10 @@
 
 The architecture is deliberately **modular**: the extension handles UI and page access; Python handles networking to public APIs and the summarization algorithm. Nothing runs in the cloud that you do not already call via those public endpoints (dictionary and Wikipedia).
 
+## Demo video
+
+[SummaryGo demo video](https://youtu.be/Vgf73ubfas8)
+
 ---
 
 ## Chrome installer (what it does)
