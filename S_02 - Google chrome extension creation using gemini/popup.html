@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PageVoice – AI Summarizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="url(#grad1)"/>
+            <path d="M8 9l3 3-3 3M13 15h3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="grad1" x1="2" y1="2" x2="22" y2="22">
+                <stop offset="0%" stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <h1 class="logo-title">PageVoice</h1>
+          <p class="logo-subtitle">Powered by Gemini 3.1 Flash</p>
+        </div>
+      </div>
+      <div class="accessibility-badge" title="Accessibility First">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="5" r="2" fill="currentColor"/>
+          <path d="M12 8c-4 0-7 1.5-7 4v1h2v-1c0-1.1 2.2-2 5-2s5 .9 5 2v1h2v-1c0-2.5-3-4-7-4z" fill="currentColor"/>
+          <path d="M9 13l-1 8h2l1-5 1 5h2l-1-8H9z" fill="currentColor"/>
+        </svg>
+        A11Y
+      </div>
+    </header>
+
+    <!-- Controls -->
+    <section class="controls" aria-label="Summarization controls">
+      <div class="summary-type-row">
+        <label class="control-label" for="summaryType">Summary Style</label>
+        <div class="select-wrapper">
+          <select id="summaryType" class="select" aria-label="Choose summary style">
+            <option value="brief">⚡ Brief (2-3 sentences)</option>
+            <option value="detailed" selected>📋 Detailed (key points)</option>
+            <option value="eli5">🧒 Simple (Easy language)</option>
+            <option value="accessibility">♿ Accessibility-focused</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="voice-row">
+        <label class="control-label" for="voiceRate">Reading Speed</label>
+        <div class="slider-container">
+          <span class="slider-label">Slow</span>
+          <input type="range" id="voiceRate" min="0.5" max="2" step="0.1" value="0.9" class="slider" aria-label="Speech rate" />
+          <span class="slider-label">Fast</span>
+          <span class="rate-value" id="rateDisplay">0.9×</span>
+        </div>
+      </div>
+
+      <div class="voice-row">
+        <label class="control-label" for="voicePitch">Voice Pitch</label>
+        <div class="slider-container">
+          <span class="slider-label">Low</span>
+          <input type="range" id="voicePitch" min="0.5" max="2" step="0.1" value="1.0" class="slider" aria-label="Voice pitch" />
+          <span class="slider-label">High</span>
+          <span class="rate-value" id="pitchDisplay">1.0×</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Action Button -->
+    <div class="action-area">
+      <button id="summarizeBtn" class="btn-primary" aria-live="polite" aria-label="Summarize and read current page">
+        <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" fill="currentColor" opacity="0.3"/>
+          <path d="M9.5 8.5l6 3.5-6 3.5z" fill="currentColor"/>
+        </svg>
+        <span id="btnText">Summarize &amp; Read Aloud</span>
+      </button>
+    </div>
+
+    <!-- Status -->
+    <div id="statusArea" class="status-area" role="status" aria-live="polite" aria-atomic="true">
+      <div id="statusIcon" class="status-icon hidden"></div>
+      <p id="statusMsg" class="status-msg"></p>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingArea" class="loading-area hidden" aria-hidden="true">
+      <div class="wave-loader">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="loading-text" id="loadingText">Extracting page content…</p>
+    </div>
+
+    <!-- Summary Output -->
+    <div id="summaryCard" class="summary-card hidden" role="region" aria-label="Page summary">
+      <div class="summary-header">
+        <h2 class="summary-title">Summary</h2>
+        <div class="summary-actions">
+          <button id="copyBtn" class="icon-btn" title="Copy summary" aria-label="Copy summary to clipboard">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+          <button id="replayBtn" class="icon-btn" title="Replay audio" aria-label="Replay audio summary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5V1L7 6l5 5V7a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6H4a8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8z" fill="currentColor"/>
+            </svg>
+          </button>
+          <button id="stopBtn" class="icon-btn stop-btn hidden" title="Stop audio" aria-label="Stop audio playback">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+              <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div id="summaryText" class="summary-text" tabindex="0" aria-label="Summary content"></div>
+      <div class="audio-bar hidden" id="audioBar">
+        <div class="audio-pulse">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <span class="audio-label">Reading aloud…</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Gemini 2.0 Flash Lite</span>
+      <span class="footer-dot">•</span>
+      <span>Accessibility First</span>
+    </footer>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
